@@ -33,85 +33,88 @@ driver.find_element(
 time.sleep(10)
 
 while True:
-    url = input("write url  ")
-    driver.get(url)
-    input("next...")
-    # functions
+    try:
+        input("choose group and people tab...")
+        input("next...")
+        # functions
 
 
-    def calculate_score():
-        rows = driver.find_elements(By.CSS_SELECTOR,  'main div[role="button"]')
-        quiz_score = 0
-        lab_score = 0
-        mid_1 = 0
-        mid_2 = 0
-        final = 0
-        for r in rows:
-            r = r.find_element(By.XPATH, "..")
-            if "Expand " in r.get_attribute("innerHTML"):
-                try:
-                    name = r.find_element(By.CSS_SELECTOR,  'div:first-child').get_attribute("aria-label").split("Expand ")[1]
-                    value = r.find_element(By.CSS_SELECTOR,  'span:first-child span:nth-child(2) span').text
-                    if "ab" in name:
-                        try:
-                            lab_score += int(value)
-                        except:
-                            pass
-                    elif "შუალედური 1" in name:
-                        try:
-                            mid_1 += int(value)
-                        except:
-                            pass
-                    elif "ფინალური" in name:
-                        try:
-                            final += int(value)
-                        except:
-                            pass
-                    elif "შუალედური 2" in name:
-                        try:
-                            mid_2 += int(value)
-                        except:
-                            pass
-                    elif "ქვიზი" in name:
-                        try:
-                            quiz_score += int(value)
-                        except:
-                            pass
-                except:
-                    continue
-        return [lab_score,quiz_score,mid_1,mid_2,final]
+        def calculate_score():
+            rows = driver.find_elements(By.CSS_SELECTOR,  'main div[role="button"]')
+            quiz_score = 0
+            lab_score = 0
+            mid_1 = 0
+            mid_2 = 0
+            final = 0
+            for r in rows:
+                r = r.find_element(By.XPATH, "..")
+                if "Expand " in r.get_attribute("innerHTML"):
+                    try:
+                        name = r.find_element(By.CSS_SELECTOR,  'div:first-child').get_attribute("aria-label").split("Expand ")[1]
+                        value = r.find_element(By.CSS_SELECTOR,  'span:first-child span:nth-child(2) span').text
+                        if "ab" in name:
+                            try:
+                                lab_score += int(value)
+                            except:
+                                pass
+                        elif "შუალედური 1" in name:
+                            try:
+                                mid_1 += int(value)
+                            except:
+                                pass
+                        elif "ფინალური" in name:
+                            try:
+                                final += int(value)
+                            except:
+                                pass
+                        elif "შუალედური 2" in name:
+                            try:
+                                mid_2 += int(value)
+                            except:
+                                pass
+                        elif "ქვიზი" in name:
+                            try:
+                                quiz_score += int(value)
+                            except:
+                                pass
+                    except:
+                        continue
+            return [lab_score,quiz_score,mid_1,mid_2,final]
 
 
 
-    table = driver.find_elements(By.CSS_SELECTOR, 'tbody')[1]
-    students = table.find_elements(By.CSS_SELECTOR, 'tr')
-    scores = {}
-    for student in students:
-        student_name = student.find_element(By.CSS_SELECTOR, 'span:nth-child(3)').text
-        student.click()
-        time.sleep(5)
-        data = calculate_score()
-        #tr
-        en = "abcdefghijklmnopqrstuvwxyz"
-        ge = "აბცდეფგჰიჯკლმნოპქრსტუვწხყზ"
-        alph = dict(zip(en, ge))
-        alph["ცჰ"] = "ჩ"
-        alph["კრ"] = "ქრ"
-        alph["სჰ"] = "შ"
-        alph["კჰ"] = "ხ"
-        alph["დზ"] = "ძ"
-        alph["პხ"] = "ფხ"
-        alph["ტს"] = "ც"
-        for en, ge in alph.items():
-            student_name = [i.replace(ge, en) for i in student_name]
-            student_name = "".join(student_name)
-        #tr
-        scores[student_name] = f"{data[0]}-{data[1]}-{data[2]}-{data[3]}-{data[4]}"   
-        driver.back() 
-    print(scores)
-    scors = []
-    for student_name, score in scores.items():
-        scors.append(f"{student_name}: {score}\n")
+        table = driver.find_elements(By.CSS_SELECTOR, 'tbody')[1]
+        students = table.find_elements(By.CSS_SELECTOR, 'tr')
+        scores = {}
+        for student in students:
+            student_name = student.find_element(By.CSS_SELECTOR, 'span:nth-child(3)').text
+            student.click()
+            time.sleep(5)
+            data = calculate_score()
+            #tr
+            en = "abcdefghijklmnopqrstuvwxyz"
+            ge = "აბცდეფგჰიჯკლმნოპქრსტუვწხყზ"
+            alph = dict(zip(en, ge))
+            alph["ცჰ"] = "ჩ"
+            alph["კრ"] = "ქრ"
+            alph["სჰ"] = "შ"
+            alph["კჰ"] = "ხ"
+            alph["დზ"] = "ძ"
+            alph["პხ"] = "ფხ"
+            alph["ტს"] = "ც"
+            for en, ge in alph.items():
+                student_name = [i.replace(ge, en) for i in student_name]
+                student_name = "".join(student_name)
+            #tr
+            scores[student_name] = f"{data[0]}-{data[1]}-{data[2]}-{data[3]}-{data[4]}"   
+            driver.back() 
+        print(scores)
+        scors = []
+        for student_name, score in scores.items():
+            scors.append(f"{student_name}: {score}\n")
 
-    with open("scores.txt", "w", encoding="utf-8") as f:
-        f.writelines(scors)
+        with open("scores.txt", "w", encoding="utf-8") as f:
+            f.writelines(scors)
+    except Exception as e:
+        print("e")
+        print("\n\nerror happend ! .. :(")
