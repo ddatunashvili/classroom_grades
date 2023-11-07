@@ -1,36 +1,51 @@
-# -*- coding: utf-8 -*-
-from logging import exception
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 import time
-# for selections
 from selenium.webdriver.common.by import By
+from pprint import pprint as pp
 
-import undetected_chromedriver as UC
+# Provide the full path to the 'chromedriver.exe' executable
+chromedriver_path = 'chromedriver.exe'  # Replace with the actual path
 
-gmail_username = 'davitidatunashvili12'
-gmail_password = 'h1287h21g8ygf8192hd87h12kjnc$%^^&T&%$%^&'
+# Create a service object for the ChromeDriver with the specified executable path
+service = Service(executable_path=chromedriver_path)
 
-driver = UC.Chrome(use_subprocess=True)
-driver.set_window_size(400, 500)
+# Create the options object using the Options class
+options = Options()
+options.add_argument(r"--user-data-dir=C:\Users\admin\AppData\Local\Google\Chrome\User Data")
+options.add_argument('--no-sandbox')
+options.add_argument("--disable-gpu")
+options.add_argument("--disable-webgl")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--disable-features=NetworkService")
+options.add_argument('--disable-blink-features=AutomationControlled')
+options.add_argument(
+    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+)
+
+# Create the WebDriver instance with the specified service and options
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+driver = webdriver.Chrome(service=service, options=options)
+
 
 url = input("write url  ")
 # driver.minimize_window()
 # driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.get(url)
 input("start...")
-time.sleep(2)
-driver.find_element(
-    By.CSS_SELECTOR, 'input[type="email"]').send_keys(gmail_username)
-driver.find_element(
-    By.CSS_SELECTOR, 'input[type="email"]').send_keys(Keys.RETURN)
-time.sleep(3)
-driver.find_element(
-    By.CSS_SELECTOR, 'input[type="password"]').send_keys(gmail_password)
-driver.find_element(
-    By.CSS_SELECTOR, 'input[type="password"]').send_keys(Keys.RETURN)
-time.sleep(10)
+# time.sleep(2)
+# driver.find_element(
+#     By.CSS_SELECTOR, 'input[type="email"]').send_keys(gmail_username)
+# driver.find_element(
+#     By.CSS_SELECTOR, 'input[type="email"]').send_keys(Keys.RETURN)
+# time.sleep(3)
+# driver.find_element(
+#     By.CSS_SELECTOR, 'input[type="password"]').send_keys(gmail_password)
+# driver.find_element(
+#     By.CSS_SELECTOR, 'input[type="password"]').send_keys(Keys.RETURN)
+# time.sleep(10)
 
 while True:
     try:
